@@ -1,7 +1,14 @@
 #! /usr/bin/env python 
 
+# THE BEER-WARE LICENSE" (Revision 42):
+# <xfguo@xfguo.org> wrote a file that we used as a reference for this project .
+
 import re 
 import sys 
+import hdlparse.vhdl_parser as vhdl
+import hdlparse.verilog_parser as vlog
+from hdlparse.vhdl_parser import VhdlComponent
+
 
 class tbg (object):
 	def __init__(self, infilename): #constructor 
@@ -18,10 +25,13 @@ class tbg (object):
 		self.parser()
 		self.open_outputfile()
 		
+
 	def open_inputfile (self): #read the module file 
 		try:
 			self.inputfile = open(self.infilename, 'r')
 			self.textinfile= self.inputfile.read()
+			vhdl_objs = vhdl_ex.extract_objects_from_source(textinfile)
+
 		except:
 			print ("input file cannot be opened")
 			sys.exit(1)
@@ -39,10 +49,10 @@ class tbg (object):
 
 
 
-	if __name__ == "__main__":
+	if __name__ == "__main__": #main function 
 
 		if len(sys.argv) == 1:
-			print ("Usage: tbgen input_verilog_file_name ")
+			print ("Invailed Command Use: tbgen.py input_verilog_file_name ")
 			sys.exit(1)
 		
 		testbench=tbg(sys.argv[1])
