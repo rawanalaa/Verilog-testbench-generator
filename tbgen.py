@@ -1,6 +1,5 @@
 #! /usr/bin/env python 
 
-# THE BEER-WARE LICENSE" (Revision 42):
 # <xfguo@xfguo.org> wrote a file that we used as a reference for this project .
 
 import re 
@@ -10,7 +9,9 @@ import hdlparse.verilog_parser as vlog
 from hdlparse.vhdl_parser import VhdlComponent
 
 
-class tbg (object):
+class tbgen(object):
+
+
 	def __init__(self, infilename): #constructor 
 		self.infilename = infilename
 		self.module_name = ""
@@ -24,13 +25,15 @@ class tbg (object):
 		self.open_inputfile()
 		self.parser()
 		self.open_outputfile()
+		vhdl_ex = vhdl.VhdlExtractor()
+		vlog_ex = vlog.VerilogExtractor()
 		
 
 	def open_inputfile (self): #read the module file 
 		try:
 			self.inputfile = open(self.infilename, 'r')
 			self.textinfile= self.inputfile.read()
-			vhdl_objs = vhdl_ex.extract_objects_from_source(textinfile)
+			vlog_mods = vlog_ex.extract_objects_from_source(textinfile)
 
 		except:
 			print ("input file cannot be opened")
@@ -54,11 +57,12 @@ class tbg (object):
 		if len(sys.argv) == 1:
 			print ("Invailed Command Use: tbgen.py input_verilog_file_name ")
 			sys.exit(1)
-		
-		testbench=tbg(sys.argv[1])
-		testbench.print_module_head()
-		testbench.print_wires()
-		testbench.print_dut()
-		testbench.print_clock_gen()
-		testbench.print_module_end()
-		testbench.close()
+		print("Object  NOT Created")
+		testbench=tbgen(sys.argv[1])
+		print("Object Created")
+		#testbench.print_module_head()
+		#testbench.print_wires()
+		#testbench.print_dut()
+		#testbench.print_clock_gen()
+		#testbench.print_module_end()
+		#testbench.close()
