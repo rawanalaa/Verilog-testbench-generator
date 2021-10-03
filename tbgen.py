@@ -23,9 +23,9 @@ def sourcefile(code):
 
         for j in i.ports:
             if j.mode == "input":
-                outputfile.write("reg  " + j.data_type + " "  + j.name + " ;" +'\n')
+                outputfile.write("reg  " + j.data_type + " "  + j.name + "_i ;" +'\n')
             elif j.mode == "output":
-                outputfile.write("wire  " + j.data_type + " "  + j.name + " ;" + '\n')
+                outputfile.write("wire  " + j.data_type + " "  + j.name + "_o ;" + '\n')
 
         outputfile.write('\n')
         outputfile.write(i.name + "  MUV  ( ")
@@ -33,9 +33,9 @@ def sourcefile(code):
 
         for j in i.ports:
             if i.ports.index(j)!=last:
-                outputfile.write(j.name + "  , " )
+                outputfile.write(j.name + " , " )
             else:
-                outputfile.write(j.name + "   " )
+                outputfile.write(j.name + " " )
 
         outputfile.write(" );"+'\n')
         outputfile.write('\n')
@@ -43,10 +43,15 @@ def sourcefile(code):
         outputfile.write("$dumpfile(\"" + i.name + ".vcd\");" + '\n')
         outputfile.write("$dumpvars;"+'\n')
         outputfile.write("end"+'\n')
+        outputfile.write("initial begin"+'\n')
+
+        for j in i.ports:
+            if j.mode == "input":
+                outputfile.write(j.name+" = 0;" + '\n')
+
        
 
-         
-        
+    
         
 
 def main():
