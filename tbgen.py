@@ -8,7 +8,7 @@ import hdlparse.verilog_parser as vlog
 
 
 
-def sourcefile(code , rand ):
+def generate_Test (code , rand ):
     vlog_ex = vlog.VerilogExtractor()
     vlog_mods = vlog_ex.extract_objects_from_source(code)
 
@@ -18,6 +18,16 @@ def sourcefile(code , rand ):
         outputfile= open(outputfile_name,'w+')
         outputfile.write("`timescale 1ns/1ps" + '\n') #The timescale is 1ns/1ps
         outputfile.write('\n'+ "module   " + i.name + "_tb;"  + '\n')
+        outputfile.write('\n')
+
+       
+       #connects its input ports to variables of type reg and output ports to wires.
+        for j in i.ports:
+            if j.mode == "input":
+                outputfile.write("  reg  " + j.data_type + " "  + j.name + "_i;" +'\n')
+            elif j.mode == "output":
+                outputfile.write("  wire  " + j.data_type + " "  + j.name + "_o;" + '\n')
+           
         outputfile.write('\n')
 
         #termination testbench parameter
@@ -34,15 +44,6 @@ def sourcefile(code , rand ):
              if j.name == "reset" or j.name =="rst":
                  outputfile.write("  parameter polarity = 1 ;"  + '\n')
                  outputfile.write("  parameter rst_duration = 10 ;"  + '\n')
-
-       #connects its input ports to variables of type reg and output ports to wires.
-        for j in i.ports:
-            if j.mode == "input":
-                outputfile.write("  reg  " + j.data_type + " "  + j.name + "_i;" +'\n')
-            elif j.mode == "output":
-                outputfile.write("  wire  " + j.data_type + " "  + j.name + "_o;" + '\n')
-           
-        outputfile.write('\n')
         outputfile.write("  "+i.name + "  MUV  ( ")
         last = len(i.ports)-1
 
@@ -79,6 +80,24 @@ def sourcefile(code , rand ):
                 outputfile.write (" always #period clock_i = ~clock_i;" + '\n')
         outputfile.write('\n')
 
+          #reset signal generator 
+        for j in i.ports:
+            if j.name == "rst":
+                outputfile.write("  initial begin"+'\n')
+                outputfile.write("      rst_i=polarity;" + '\n')
+                outputfile.write("      #(rst_duration/2);" + '\n')
+                outputfile.write("      rst_i=~polarity;" + '\n')
+                outputfile.write("  end"+'\n')
+                outputfile.write('\n')
+            elif j.name == "reset":
+                outputfile.write("  initial begin"+'\n')
+                outputfile.write("      reset_i=polarity;" + '\n')
+                outputfile.write("      #(reset_duration/2);" + '\n')
+                outputfile.write("      reset_i=~polarity;" + '\n')
+                outputfile.write("  end"+'\n')
+                outputfile.write('\n')
+        
+
         #dumbs the changes in all signals
         outputfile.write("  initial begin"+'\n')
         outputfile.write("      $dumpfile(\"" + i.name + ".vcd\");" + '\n') 
@@ -112,28 +131,6 @@ def sourcefile(code , rand ):
         outputfile.write("  initial #termination $finish; "+'\n')
         outputfile.write('\n')
 
-        
-
-        
-        
-
-        #reset signal generator 
-        for j in i.ports:
-            if j.name == "rst":
-                outputfile.write("  initial begin"+'\n')
-                outputfile.write("      rst_i=polarity;" + '\n')
-                outputfile.write("      #(rst_duration/2);" + '\n')
-                outputfile.write("      rst_i=~polarity;" + '\n')
-                outputfile.write("  end"+'\n')
-                outputfile.write('\n')
-            elif j.name == "reset":
-                outputfile.write("  initial begin"+'\n')
-                outputfile.write("      reset_i=polarity;" + '\n')
-                outputfile.write("      #(reset_duration/2);" + '\n')
-                outputfile.write("      reset_i=~polarity;" + '\n')
-                outputfile.write("  end"+'\n')
-                outputfile.write('\n')
-        
 
         if rand =="-rand" :
             outputfile.write("  always begin" + '\n' +"     #rand_period \n" ) 
@@ -159,7 +156,7 @@ def main():
     else :
         inputfile=open(sys.argv[1] ,"r+")
     code=inputfile.read()
-    sourcefile(code ,sys.argv[1])
+    generate_Test(code ,sys.argv[1])
     inputfile.close()
     print ("Testbench Created")
 
