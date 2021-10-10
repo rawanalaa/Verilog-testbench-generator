@@ -44,8 +44,18 @@ def generate_Test (code , rand ):
              if j.name == "reset" or j.name =="rst":
                  outputfile.write("  parameter polarity = 1 ;"  + '\n')
                  outputfile.write("  parameter rst_duration = 10 ;"  + '\n')
-        outputfile.write("  "+i.name + "  MUV  ( ")
-        last = len(i.ports)-1
+        
+                 
+        outputfile.write("  "+ i.name )
+        gen =0 
+        for j in i.generics:
+            if gen ==0 :
+              outputfile.write("  #("+j.name + "=  ")
+              gen+=1
+            else :
+             outputfile.write(","+j.name + "=  ")
+        outputfile.write(")  MUV( ")
+        last = len(i.ports)-1 
 
         for j in i.ports:
             if i.ports.index(j)!=last:
