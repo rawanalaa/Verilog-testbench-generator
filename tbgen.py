@@ -45,7 +45,8 @@ def generate_Test (code , rand ):
                  outputfile.write("  parameter polarity = 1 ;"  + '\n')
                  outputfile.write("  parameter rst_duration = 10 ;"  + '\n')
         
-                 
+        outputfile.write('\n')
+        
         outputfile.write("  "+ i.name )
         gen =0 
         for j in i.generics:
