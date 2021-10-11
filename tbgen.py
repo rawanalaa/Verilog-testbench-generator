@@ -54,7 +54,9 @@ def generate_Test (code , rand ):
               gen+=1
             else :
              outputfile.write(","+j.name + "=  ")
-        outputfile.write(")  MUV( ")
+        if gen != 0 :
+            outputfile.write(") ")
+        outputfile.write("  MUV( ")
         last = len(i.ports)-1 
 
         for j in i.ports:
