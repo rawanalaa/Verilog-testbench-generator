@@ -98,14 +98,14 @@ def generate_Test (code , rand ):
             if j.name == "rst":
                 outputfile.write("  initial begin"+'\n')
                 outputfile.write("      rst_i=polarity;" + '\n')
-                outputfile.write("      #(rst_duration/2);" + '\n')
+                outputfile.write("      #rst_duration;" + '\n')
                 outputfile.write("      rst_i=~polarity;" + '\n')
                 outputfile.write("  end"+'\n')
                 outputfile.write('\n')
             elif j.name == "reset":
                 outputfile.write("  initial begin"+'\n')
                 outputfile.write("      reset_i=polarity;" + '\n')
-                outputfile.write("      #(reset_duration/2);" + '\n')
+                outputfile.write("      #reset_duration;" + '\n')
                 outputfile.write("      reset_i=~polarity;" + '\n')
                 outputfile.write("  end"+'\n')
                 outputfile.write('\n')
